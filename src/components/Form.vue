@@ -6,7 +6,7 @@
       <input type="submit" value="Calculer" />
     </form>
     <span v-if="error !== ''"> {{ error }}</span>
-    <table id="response" v-if="area !== 'NaN' && area !== 0">
+    <table id="response" v-if="area !== 0">
       <caption>
         Résultats (votre saisie était
         {{
@@ -40,17 +40,19 @@ export default defineComponent({
   name: "FormComponent",
   data() {
     return {
-      radius: Number,
+      radius: 0,
       error: "",
-      area: Number,
-      perimeter: Number,
-      volume: Number,
+      area: 0,
+      perimeter: 0,
+      volume: 0,
     };
   },
   computed: {
+    //stocke la valeur dans le store
     ...mapWritableState(useRadiusStore, {
       setRadius: "radius",
     }),
+    //récupère la valeur du store
     ...mapState(useRadiusStore, {
       getRadius: "radius",
     }),
@@ -63,13 +65,18 @@ export default defineComponent({
     this.checkRadius();
   },
   methods: {
+    //appelle les fonctions du store
     ...mapActions(useRadiusStore, ["calcPerimeter", "calcVolume", "calcArea"]),
+
+    //vérifie si le store contient quelque chose (ici une valeur différente de zéro). si oui, fait directement les calculs avec la valeur stockée
     checkRadius: function () {
-      if (this.currentRadius !== null) {
+      if (this.currentRadius !== 0) {
         this.radius = this.currentRadius;
         this.calculateValues();
       }
     },
+
+    //vérifie l'input de l'utilisateur. si celui-ci est conforme, stocke la valeur dans le store puis appelle la fonction responsable des calculs
     handleSubmit: function () {
       if (
         this.radius <= 0 ||
@@ -84,6 +91,7 @@ export default defineComponent({
       this.calculateValues();
     },
 
+    //effectue les calculs d'aire de surface et de volume avec la valeur stockée dans le store
     calculateValues() {
       const store = useRadiusStore();
       this.area = store.calcArea();
