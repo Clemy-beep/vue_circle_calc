@@ -6,7 +6,7 @@ export const useRadiusStore = defineStore({
     radius: Number,
   }),
   getters: {
-    getStats: (state) => state.radius,
+    getRadius: (state) => state.radius,
   },
   actions: {},
 });
