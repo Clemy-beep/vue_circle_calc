@@ -1,18 +1,34 @@
 <template>
   <div class="home">
     <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+    <h1>
+      <span class="material-icons"> calculate </span> Calculateur de dimensions
+      d'un cercle
+    </h1>
+    <p>
+      Cette application sert à calculer le périmètre et l'aire d'un cercle à
+      partir de votre saisie. Elle permet également de connaître le volume de la
+      sphère correspondante.
+    </p>
+    <FormComponent />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
+import FormComponent from "@/components/Form.vue"; // @ is an alias to /src
 
 export default defineComponent({
   name: "HomeView",
   components: {
-    HelloWorld,
+    FormComponent,
   },
 });
 </script>
+
+<style scoped>
+p {
+  margin: 0 20%;
+  text-align: center;
+}
+</style>
