@@ -6,9 +6,12 @@
       <input type="submit" value="Calculer" />
     </form>
     <span v-if="error !== ''"> {{ error }}</span>
-    <table id="response" v-if="area > 0">
+    <table id="response" v-if="area !== 'NaN'">
       <caption>
-        Résultats :
+        Résultats (votre saisie était
+        {{
+          radius
+        }}) :
       </caption>
       <thead>
         <tr>
@@ -62,6 +65,7 @@ export default defineComponent({
   methods: {
     checkRadius: function () {
       if (this.getRadius !== null) {
+        this.radius = this.getRadius;
         this.area = this.calcArea(this.currentRadius);
         this.perimeter = this.calcPerimeter(this.currentRadius);
         this.volume = this.calcVolume(this.currentRadius);
