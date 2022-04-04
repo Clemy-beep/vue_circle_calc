@@ -6,7 +6,7 @@
       <input type="submit" value="Calculer" />
     </form>
     <span v-if="error !== ''"> {{ error }}</span>
-    <table id="response" v-if="area !== 'NaN'">
+    <table id="response" v-if="area !== 'NaN' && area !== 0">
       <caption>
         Résultats (votre saisie était
         {{
@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { mapState, mapWritableState } from "pinia";
+import { mapActions, mapState, mapWritableState } from "pinia";
 import { defineComponent } from "vue";
 import { useRadiusStore } from "../stores/radiusStore";
 
@@ -63,17 +63,14 @@ export default defineComponent({
     this.checkRadius();
   },
   methods: {
+    ...mapActions(useRadiusStore, ["calcPerimeter", "calcVolume", "calcArea"]),
     checkRadius: function () {
-      if (this.getRadius !== null) {
-        this.radius = this.getRadius;
-        this.area = this.calcArea(this.currentRadius);
-        this.perimeter = this.calcPerimeter(this.currentRadius);
-        this.volume = this.calcVolume(this.currentRadius);
+      if (this.currentRadius !== null) {
+        this.radius = this.currentRadius;
+        this.calculateValues();
       }
     },
-
     handleSubmit: function () {
-      console.log(typeof this.radius);
       if (
         this.radius <= 0 ||
         !Number.isInteger(this.radius) ||
@@ -84,24 +81,14 @@ export default defineComponent({
         return;
       }
       this.setRadius = this.radius;
-      this.area = this.calcArea(this.radius);
-      this.perimeter = this.calcPerimeter(this.radius);
-      this.volume = this.calcVolume(this.radius);
+      this.calculateValues();
     },
 
-    calcArea: function (radius) {
-      let num = Math.PI * radius * radius;
-      return num.toFixed(2);
-    },
-
-    calcPerimeter: function (radius) {
-      let num = 2 * Math.PI * radius;
-      return num.toFixed(2);
-    },
-
-    calcVolume: function (radius) {
-      let num = (4 / 3) * Math.PI * Math.pow(radius, 3);
-      return num.toFixed(2);
+    calculateValues() {
+      const store = useRadiusStore();
+      this.area = store.calcArea();
+      this.perimeter = store.calcPerimeter();
+      this.volume = store.calcVolume();
     },
   },
 });
